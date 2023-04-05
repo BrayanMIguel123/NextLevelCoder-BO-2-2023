@@ -1,5 +1,6 @@
 from dino_runner.components.obstacles.cactus import Cactus
 from dino_runner.utils.constants import SMALL_CACTUS
+import pygamee
 
 class obstacleManager:
 
@@ -15,8 +16,13 @@ class obstacleManager:
             if game.player.rect.colliderect(obstacle.rect):
                 pygame.time.delay(500)
                 game,playing = False
+                game.death_count +=1
                 break
+
 
     def draw(self, screen):
         for obstacle in self.Obstacles:
             obstacle.draw(screen)
+
+    def reset_obstacles(self):
+        self.obstacles = []
