@@ -1,6 +1,9 @@
-import pygame
+import pygame 
+
 from dino_runner.components.obstacles.obstacle_manager import obstacleManager
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, COLORS, RUNNING
+from dino_runner.components.powerups.power_up_manager import PowerUpManager
+import random
+from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, CLOUD, COLORS, RUNNING
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.text_utils import TextUtils
 
@@ -16,12 +19,15 @@ class Game:
         self.game_speed = 20
         self.x_pos_bg = 0
         self.y_pos_bg = 380
+        self.x_pos_cloud=0
+        self.y_pos_cloud=0
         self.player = Dinosaur()
         self.obstacle_manager = obstacleManager()
         self.text_utils = TextUtils()
         self.points = 0
         self.game_running = True
         self.death_count = 0
+        self.power_up_manager = PowerUpManager()
 
     def execute(self):
         while self.game_running:
@@ -32,6 +38,7 @@ class Game:
     def run(self):
         # Game loop: events - update - draw
         self.playing = True
+        self.draw_cloud()
         while self.playing:
             self.events()
             self.update()
@@ -51,6 +58,7 @@ class Game:
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
         self.draw_background()
+        self.draw_cloud()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
         self.score()
@@ -65,6 +73,14 @@ class Game:
             self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
             self.x_pos_bg = 0
         self.x_pos_bg -= self.game_speed
+    
+    def draw_cloud(self):
+        image_width = CLOUD.get_width()
+        self.screen.blit(CLOUD, (self.x_pos_cloud, self.y_pos_cloud))
+        if self.x_pos_cloud + image_width < 0:
+            self.x_pos_cloud = SCREEN_WIDTH + random.randint(900, 1000)
+            self.y_pos_cloud = random.randint(60, 120)
+        self.x_pos_cloud -= self.game_speed
 
     def score(self):
         self.points +=1
