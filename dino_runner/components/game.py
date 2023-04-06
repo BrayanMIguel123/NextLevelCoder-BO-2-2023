@@ -37,6 +37,8 @@ class Game:
 
     def run(self):
         # Game loop: events - update - draw
+        self.obstacle_manager.reset_obstacles()
+        self.power_up_manager.reset_power_ups(self.points)
         self.playing = True
         self.draw_cloud()
         while self.playing:
@@ -53,6 +55,7 @@ class Game:
         user_imput = pygame.key.get_pressed()
         self.player.update(user_imput)
         self.obstacle_manager.update(self)
+        self.powerup_manager.update(self.points, self.game_speed, self.player)
 
     def draw(self):
         self.clock.tick(FPS)
@@ -61,6 +64,7 @@ class Game:
         self.draw_cloud()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
+        self.powerup_manager.draw(self.screen)
         self.score()
         pygame.display.update()
         pygame.display.flip()
@@ -86,6 +90,7 @@ class Game:
         self.points +=1
         text, text_rect = self.text_utils.get_score_element(self.point)
         self.screen.blit(text, text_rect)
+        self.player.check_invicibility(self.screen)
 
     def show_menu(self):
         self.game_running = True
