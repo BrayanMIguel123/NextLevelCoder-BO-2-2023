@@ -1,6 +1,8 @@
 from dino_runner.components.obstacles.cactus import Cactus
-from dino_runner.utils.constants import SMALL_CACTUS
-import pygamee
+from dino_runner.components.obstacles.bird import Bird
+from dino_runner.utils.constants import SMALL_CACTUS, BIRD, LARGE_CACTUS
+import pygame
+import random
 
 class obstacleManager:
 
@@ -9,7 +11,10 @@ class obstacleManager:
 
     def update(self, game):
         if len(self.Obstacles) == 0:
-            self.Obstacles.append(Cactus(SMALL_CACTUS))
+            self.obstacles_options = random.choice([Cactus(SMALL_CACTUS), Bird(BIRD)])
+            self.obstacles.append(self.obstacle_options)
+
+
 
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.Obstacles)
